@@ -14,4 +14,24 @@ func main() {
 
 	findNode := myLl.Find("HARI")
 	println("value :", findNode.Value)
+
+	println("---------------double-----------------")
+
+	myLlDouble := typelist.NewLinkedlistDouble()
+
+	myLlDouble.PushNext("di")
+	myLlDouble.PushNext("suatu")
+	myLlDouble.PushNext("hari")
+	myLlDouble.PushNext("tanpa")
+	myLlDouble.PushNext("sengaja")
+	myLlDouble.PushNext("kita")
+
+	// myLlDouble.PopPrev()
+	myLlDouble.PopPrev()
+	myLlDouble.PopPrev()
+	myLlDouble.PopPrev()
+
+	myLlDouble.PushPrev("bertemu")
+
+	myLlDouble.Print()
 }
