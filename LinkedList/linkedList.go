@@ -11,10 +11,7 @@ type node struct {
 }
 
 func newNode(value string) *node {
-	return &node{
-		value: value,
-		next:  nil,
-	}
+	return &node{value: value, next: nil}
 }
 
 func (n *node) append(value string) *node {
@@ -42,10 +39,11 @@ func newLinkedList() *linkedList {
 }
 
 func (ll *linkedList) push(value string) {
-	n := newNode(value)
+	newNode := newNode(value)
+
 	if ll.head == nil {
-		ll.head = n
-		ll.tail = n
+		ll.head = newNode
+		ll.tail = newNode
 	} else {
 		ll.tail = ll.tail.append(value)
 	}
@@ -57,11 +55,11 @@ func (ll *linkedList) pop() {
 	root := ll.head
 
 	if root == nil {
-		fmt.Println("Linkedlist is Empty...")
+		fmt.Println("LinkedList is Empty...")
 		return
 	}
 
-	if root.next == nil {
+	if root.next != nil {
 		ll.head = nil
 		ll.tail = nil
 		ll.length = 0
@@ -80,40 +78,34 @@ func (ll *linkedList) print() {
 	root := ll.head
 
 	for root != nil {
-		fmt.Println("Value : ", root.value)
+		fmt.Println("Value :", root.value)
 		root = root.next
 	}
+
+	fmt.Println("Length :", ll.length)
 }
 
 func (ll *linkedList) find(value string) *node {
 	root := ll.head
 
-	for root != nil {
+	for root.next != nil {
 		if strings.EqualFold(root.value, value) {
 			return root
 		}
 		root = root.next
 	}
-
 	return &node{}
+
 }
 
 func main() {
+	myLl := newLinkedList()
 
-	ll := newLinkedList()
+	myLl.push("pada")
+	myLl.push("hari")
+	myLl.push("mingu")
+	myLl.print()
 
-	ll.push("pada")
-	ll.push("suatu")
-	ll.push("hari")
-	ll.push("hiduplah")
-	ll.push("seekor")
-	ll.push("kera")
-	ll.push("sakti")
-	ll.print()
-	fmt.Println("1 -------")
-	ll.pop()
-	ll.pop()
-	ll.print()
-	fmt.Println("2 -------")
-	fmt.Println("Find : ", ll.find("HIDUPLAH").value)
+	findNode := myLl.find("HARIs")
+	println("value :", findNode.value)
 }
