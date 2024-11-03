@@ -78,7 +78,7 @@ func (ll *LinkedList) Print() {
 	root := ll.Head
 
 	for root != nil {
-		fmt.Println("Value :", root.Value)
+		fmt.Println("Value :", root)
 		root = root.Next
 	}
 
