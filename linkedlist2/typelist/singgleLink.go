@@ -1,100 +1,46 @@
 package typelist
 
-import (
-	"fmt"
-	"strings"
-)
+import "fmt"
 
-type MyValue struct {
-	Name string
-	Note string
+type Snode struct {
+	Data int
+	Next *Snode
 }
 
-type SinglyNode struct {
-	Value *MyValue
-	Next  *SinglyNode
-}
-
-func SinglyNewNode(value *MyValue) *SinglyNode {
-	return &SinglyNode{Value: value, Next: nil}
-}
-
-func (n *SinglyNode) Append(value *MyValue) *SinglyNode {
-	n.Next = SinglyNewNode(value)
-	return n.Next
-}
-
-func (n *SinglyNode) Remove() *SinglyNode {
-	n.Next = nil
-	return n.Next
-}
-
-type SinglyLinkedlist struct {
-	Head   *SinglyNode
-	Tail   *SinglyNode
+type SLinkedList struct {
+	Head   *Snode
+	Tail   *Snode
 	Length int
 }
 
-func NewSinglyLinkedlist() *SinglyLinkedlist {
-	return &SinglyLinkedlist{
-		Head:   nil,
-		Tail:   nil,
-		Length: 0,
-	}
+func NewSLinkedList() *SLinkedList {
+	return &SLinkedList{}
 }
 
-func (ll *SinglyLinkedlist) Push(value *MyValue) {
-	newSinglyNode := SinglyNewNode(value)
-
-	if ll.Head == nil {
-		ll.Head = newSinglyNode
-		ll.Tail = newSinglyNode
+// Tambahkan node baru ke akhir linked list
+func (l *SLinkedList) Append(value int) {
+	newNode := &Snode{Data: value}
+	if l.Head == nil {
+		l.Head = newNode
+		l.Tail = newNode
 	} else {
-		ll.Tail = ll.Tail.Append(value)
+		l.Tail.Next = newNode
+		l.Tail = newNode
 	}
 
-	ll.Length++
+	l.Length++
 }
 
-func (ll *SinglyLinkedlist) Pop() {
-	if ll.Head == nil {
-		fmt.Println("Linkedlist is empty...")
-		return
-	}
+// Cetak seluruh node dalam linked list
+func (l *SLinkedList) Print() {
+	root := l.Head
 
-	if ll.Head.Next == nil {
-		ll.Head = nil
-		ll.Tail = nil
-		ll.Length = 0
-	}
-
-	curent := ll.Head
-	for curent.Next.Next != nil {
-		curent = curent.Next
-	}
-
-	ll.Tail = curent.Remove()
-	ll.Length--
-}
-
-func (ll *SinglyLinkedlist) Print() {
-	root := ll.Head
 	for root != nil {
-		fmt.Printf("name : %s (%s)", root.Value.Name, root.Value.Note)
+		fmt.Printf("%d -> ", root.Data)
 		root = root.Next
 	}
 
-	fmt.Println("length :", ll.Length)
-}
+	fmt.Print("nil")
+	fmt.Printf(" (%d)\n", l.Length)
 
-func (ll *SinglyLinkedlist) Find(name string) *SinglyNode {
-	root := ll.Head
-	for root != nil {
-		if strings.EqualFold(root.Value.Name, name) {
-			return root
-		}
-		root = root.Next
-	}
-
-	return &SinglyNode{}
 }
