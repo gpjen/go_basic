@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"linkedlist2/typelist"
 )
 
@@ -16,6 +17,10 @@ func main() {
 	myLL.Append(6)
 	myLL.Remove()
 	myLL.Append(7)
-
 	myLL.Print()
+
+	node := myLL.Find(5)
+	if node.Data > 0 {
+		fmt.Println("find :", node.Data)
+	}
 }
