@@ -31,6 +31,30 @@ func (l *SLinkedList) Append(value int) {
 	l.Length++
 }
 
+// Remove node di akhir list
+func (l *SLinkedList) Remove() {
+	if l.Head == nil {
+		fmt.Println("Linked list is empty...")
+		return
+	}
+
+	if l.Head.Next == nil {
+		l.Head = nil
+		l.Tail = nil
+		l.Length = 0
+		return
+	}
+
+	curent := l.Head
+	for curent.Next.Next != nil {
+		curent = curent.Next
+	}
+
+	curent.Next = nil
+	l.Tail = curent
+	l.Length--
+}
+
 // Cetak seluruh node dalam linked list
 func (l *SLinkedList) Print() {
 	root := l.Head
