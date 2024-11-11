@@ -1,0 +1,19 @@
+# Ignore Go build outputs and packages
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Dependency directories for each submodule
+**/vendor/
+**/bin/
+**/pkg/
+
+# Ignore IDE/editor files
+.idea/
+.vscode/
+.DS_Store
+*.log
