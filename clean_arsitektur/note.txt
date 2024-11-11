@@ -1,0 +1,31 @@
+/struktur_clean_arc
+│
+├── cmd/                # Folder untuk entry point aplikasi
+│   └── app/
+│       └── main.go     # File utama aplikasi, berisi konfigurasi awal dan inisialisasi komponen
+│
+├── internal/           # Folder untuk implementasi aplikasi
+│   ├── config/         # Konfigurasi aplikasi (database, environment, dll.)
+│   ├── domain/         # Folder untuk layer domain (entities dan interface)
+│   │   ├── entity/     # Definisi entities (struktur data utama)
+│   │   └── repository/ # Definisi interface repository
+│   │
+│   ├── usecase/        # Layer business logic, berisi implementasi Use Case
+│   │   └── example.go  # Contoh file use case, misalnya untuk User, Product, dll.
+│   │
+│   ├── repository/     # Implementasi repository untuk akses data
+│   │   └── user_repo.go# Implementasi spesifik repository (akses database, API, dll.)
+│   │
+│   ├── delivery/       # Layer presentation (HTTP handler, CLI, gRPC, dll.)
+│   │   ├── http/       # Implementasi HTTP handler (REST API)
+│   │   ├── grpc/       # Implementasi gRPC handler
+│   │   └── cli/        # Implementasi CLI handler (command line interface)
+│   │
+│   └── middleware/     # Middleware untuk handling request
+│
+├── pkg/                # Folder untuk kode yang dapat digunakan ulang
+│   ├── logger/         # Library untuk logging
+│   ├── database/       # Library untuk inisialisasi database (SQL, NoSQL, dsb.)
+│   └── errors/         # Penanganan error secara konsisten
+│
+└── go.mod              # File module Golang untuk dependency management

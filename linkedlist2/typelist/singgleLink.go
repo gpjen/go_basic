@@ -68,3 +68,14 @@ func (l *SLinkedList) Print() {
 	fmt.Printf(" (%d)\n", l.Length)
 
 }
+
+func (l *SLinkedList) Find(value int) *Snode {
+	curent := l.Head
+	for curent != nil {
+		if curent.Data == value {
+			return curent
+		}
+		curent = curent.Next
+	}
+	return &Snode{}
+}
