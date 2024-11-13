@@ -1,7 +1,6 @@
 package config
 
 import (
-	"clean_arsitektur/internal/domain/entity"
 	"fmt"
 	"os"
 
@@ -41,20 +40,4 @@ func InitDB() {
 	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetConnMaxLifetime(5 * 60)
 
-	if len(os.Args) > 1 && os.Args[1] == "migrate" {
-		fmt.Println("Migration started...")
-		RunPostgresMigration()
-	}
-}
-
-func RunPostgresMigration() {
-	err := DB.AutoMigrate(
-		&entity.User{},
-	)
-
-	if err != nil {
-		fmt.Printf("Migration failed: %v\n", err)
-	} else {
-		fmt.Println("Migration completed successfully!")
-	}
 }
