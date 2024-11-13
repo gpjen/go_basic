@@ -1,17 +1,18 @@
-# Menggunakan Go image versi Alpine yang ringan
-FROM golang:1.23
+# Menggunakan golang alpine image
+FROM golang:1.23-alpine
 
-# Mengatur working directory di dalam container
+# Set working directory
 WORKDIR /app
 
-# Install air untuk reload otomatis
+# Install air untuk hot reload
 RUN go install github.com/air-verse/air@latest
 
-# Copy seluruh file proyek ke dalam container
+# Salin file go.mod dan go.sum untuk mengunduh dependensi
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Salin kode aplikasi ke dalam container
 COPY . .
 
-# Install dependensi Go (termasuk di dalam folder /app)
-RUN go mod tidy
-
-# Set air sebagai perintah utama container
-CMD ["air"]
+# Jalankan air dengan konfigurasi dari file .air.toml
+CMD ["air", "-c", ".air.toml"]

@@ -6,7 +6,7 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello, Dockerized Go with Air! edit 12345")
+	fmt.Fprintln(w, "Hello, Dockerized Go with Air! 12345")
 }
 
 func main() {
