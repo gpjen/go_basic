@@ -7,7 +7,7 @@ services:
     volumes:
       - ./:/app                   # Bind mount direktori kode dari host ke container
     ports:
-      - "8080:8080"               # Map port aplikasi
+      - ${APP_PORT}:${APP_PORT}   # Map port aplikasi
     env_file:
       - .env                      # Load environment variables
     container_name: ${APP_NAME}   # Nama container

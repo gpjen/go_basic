@@ -9,7 +9,7 @@ RUN go install github.com/air-verse/air@latest
 
 # Salin file go.mod dan go.sum untuk mengunduh dependensi
 COPY go.mod go.sum ./
-RUN go mod download
+RUN go mod tidy && go mod download
 
 # Salin kode aplikasi ke dalam container
 COPY . .
