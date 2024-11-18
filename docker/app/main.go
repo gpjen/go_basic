@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encoding/base64"
+	"docker/app/routes"
 	"fmt"
 	"net/http"
 	"os"
@@ -11,13 +11,11 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/csrf"
-	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
 	"github.com/gofiber/fiber/v2/middleware/etag"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/helmet"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/joho/godotenv"
 )
 
@@ -40,7 +38,7 @@ func main() {
 
 	// limiter
 	app.Use(limiter.New(limiter.Config{
-		Max:        100,
+		Max:        60,
 		Expiration: time.Minute,
 	}))
 
@@ -69,32 +67,8 @@ func main() {
 		TimeFormat: "2006-01-02 15:04:05",
 	}))
 
-	// midleware encrypt cookie
-	appEncryptKey := os.Getenv("APP_ENCRYPT_KEY")
-	if appEncryptKey == "" {
-		fmt.Println("APP_ENCRYPT_KEY is not set. Exiting.")
-		os.Exit(1)
-	}
-	encodedKey := base64.StdEncoding.EncodeToString([]byte(appEncryptKey))
-	app.Use(encryptcookie.New(encryptcookie.Config{
-		Key: encodedKey,
-	}))
-
-	// midleware request id
-	app.Use(requestid.New())
-
-	app.Get("/user", func(c *fiber.Ctx) error {
-		return c.Status(http.StatusOK).JSON(fiber.Map{
-			"message": "Hello USER, World!",
-		})
-	})
-
-	app.Get("/user/:id", func(c *fiber.Ctx) error {
-		id := c.Params("id")
-		return c.Status(http.StatusOK).JSON(fiber.Map{
-			"id": id,
-		})
-	})
+	// Routes
+	routes.InitializeRoutes(app)
 
 	port := os.Getenv("APP_PORT")
 	if port == "" {
