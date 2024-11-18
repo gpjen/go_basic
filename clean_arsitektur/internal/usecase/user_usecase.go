@@ -18,5 +18,5 @@ func NewUserUsecase(repo repository.UserRepository) UserUsecase {
 }
 
 func (u *userUsecase) GetUser(id uint) (*entity.User, error) {
-	return u.userRepo.GetUserByID(id)
+	return u.userRepo.GetByID(id)
 }

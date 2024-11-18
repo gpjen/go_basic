@@ -1,31 +1,68 @@
-/struktur_clean_arc
+/project-root/
 │
-├── cmd/                # Folder untuk entry point aplikasi
+├── cmd/                    # Entry point aplikasi
 │   └── app/
-│       └── main.go     # File utama aplikasi, berisi konfigurasi awal dan inisialisasi komponen
+│       └── main.go         # File utama aplikasi, inisialisasi awal dan memulai aplikasi
 │
-├── internal/           # Folder untuk implementasi aplikasi
-│   ├── config/         # Konfigurasi aplikasi (database, environment, dll.)
-│   ├── domain/         # Folder untuk layer domain (entities dan interface)
-│   │   ├── entity/     # Definisi entities (struktur data utama)
-│   │   └── repository/ # Definisi interface repository
+├── internal/               # Folder utama untuk implementasi bisnis
 │   │
-│   ├── usecase/        # Layer business logic, berisi implementasi Use Case
-│   │   └── example.go  # Contoh file use case, misalnya untuk User, Product, dll.
+│   ├── config/             # Folder konfigurasi untuk inisialisasi (database, env)
 │   │
-│   ├── repository/     # Implementasi repository untuk akses data
-│   │   └── user_repo.go# Implementasi spesifik repository (akses database, API, dll.)
+│   ├── helpers             #Fungsi bantu spesifik untuk project atau kebutuhan domain tertentu. Biasanya bersifat modular dan berguna untuk menyederhanakan implementasi logika bisnis atau kebutuhan khusus project.
 │   │
-│   ├── delivery/       # Layer presentation (HTTP handler, CLI, gRPC, dll.)
-│   │   ├── http/       # Implementasi HTTP handler (REST API)
-│   │   ├── grpc/       # Implementasi gRPC handler
-│   │   └── cli/        # Implementasi CLI handler (command line interface)
+│   ├── domain/             # Layer domain, berisi entities dan interface
+│   │   ├── entity/         # Definisi entity/domain model (struktur data utama)
+│   │   │   └── user.go     # Contoh entity User
+│   │   └── repository/     # Interface repository untuk akses data
+│   │       └── user_repo.go# Interface untuk repository User
 │   │
-│   └── middleware/     # Middleware untuk handling request
+│   ├── usecase/            # Layer use case (logika bisnis)
+│   │   ├── user_usecase.go # Implementasi logika bisnis untuk User
+│   │   └── ...             # Implementasi use case lain
+│   │
+│   ├── repository/         # Implementasi repository, terhubung dengan database
+│   │   ├── user_repo.go    # Implementasi spesifik untuk User repository
+│   │   └── ...             # Implementasi repository lain
+│   │
+│   ├── delivery/           # Layer presentation, untuk handler (HTTP, gRPC, CLI)
+│   │   ├── http/           # HTTP handler untuk REST API
+│   │   │   ├── user_handler.go  # HTTP handler untuk user
+│   │   │   └── router.go        # Inisialisasi router dan route handler
+│   │   │
+│   │   ├── grpc/           # gRPC handler, jika menggunakan gRPC
+│   │   │   └── user_grpc.go # Implementasi gRPC handler untuk user
+│   │   │
+│   │   └── cli/            # CLI handler, jika ada CLI yang perlu disediakan
+│   │       └── user_cli.go # Implementasi CLI untuk user
+│   │
+│   ├── migrations/         # Folder untuk migrasi database
+│   │   └── migration.go    # File utama untuk menjalankan migrasi
+│   │
+│   ├── seeds/              # Folder untuk seeder data awal
+│   │   └── seed.go         # File utama untuk menjalankan seeder
+│   │
+│   └── middleware/         # Middleware untuk handling request
+│       └── auth_middleware.go # Contoh middleware untuk otentikasi
 │
-├── pkg/                # Folder untuk kode yang dapat digunakan ulang
-│   ├── logger/         # Library untuk logging
-│   ├── database/       # Library untuk inisialisasi database (SQL, NoSQL, dsb.)
-│   └── errors/         # Penanganan error secara konsisten
+├── pkg/                    # Folder untuk kode yang dapat digunakan ulang (library)
+│   ├── logger/             # Library untuk logging
+│   ├── database/           # Library untuk inisialisasi database (SQL, NoSQL, dsb.)
+│   ├── errors/             # Penanganan error secara konsisten
+│   └── utilities           # Kode umum, reusable, dan dapat digunakan di berbagai project atau bagian lain tanpa modifikasi. Biasanya lebih independen dan tidak terkait langsung dengan konteks project.
 │
-└── go.mod              # File module Golang untuk dependency management
+├── scripts/                # Folder untuk menyimpan script, seperti script bash
+│   ├── migrate.sh          # Skrip untuk migrasi database
+│   ├── seed.sh             # Skrip untuk seeding database
+│   ├── build.sh            # Skrip untuk build aplikasi
+│   ├── deploy.sh           # Skrip untuk deployment
+│   ├── backup_db.sh        # Skrip untuk backup database
+│   ├── restore_db.sh       # Skrip untuk restore database
+│   ├── test.sh             # Skrip untuk menjalankan unit test
+│   ├── setup_env.sh        # Skrip untuk setup environment
+│   ├── clear_cache.sh      # Skrip untuk membersihkan cache
+│   └── dll.sh              
+│
+├── .env                    # File konfigurasi environment
+├── .gitignore              # File Git ignore
+├── go.mod                  # File module Golang untuk dependency management
+└── go.sum                  # File checksums untuk dependency

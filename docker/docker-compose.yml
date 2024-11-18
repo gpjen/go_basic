@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app                   # Bind mount direktori kode dari host ke container
+    ports:
+      - ${APP_PORT}:${APP_PORT}   # Map port aplikasi
+    env_file:
+      - .env                      # Load environment variables
+    container_name: ${APP_NAME}   # Nama container
+    command: air -c .air.toml     # Menjalankan air untuk hot reload
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME} 
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    container_name: "postgres-16"
+
+volumes:
+  db_data:

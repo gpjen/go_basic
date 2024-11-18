@@ -12,9 +12,8 @@ type UserHandler struct {
 	userUsecase usecase.UserUsecase
 }
 
-func NewUserHandler(app *fiber.App, userUsecase usecase.UserUsecase) {
-	handler := &UserHandler{userUsecase: userUsecase}
-	app.Get("/users/:id", handler.GetUser)
+func NewUserHandler(userUsecase usecase.UserUsecase) UserHandler {
+	return UserHandler{userUsecase: userUsecase}
 }
 
 func (h *UserHandler) GetUser(c *fiber.Ctx) error {
