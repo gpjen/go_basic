@@ -88,7 +88,7 @@ func (ll *LinkedList) Print() {
 }
 
 func main() {
-	fmt.Printf("............start............\n")
+	fmt.Printf("----- single linkedlist -----\n")
 
 	myll := NewLinkedList()
 	myll.Push(1)
