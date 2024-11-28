@@ -43,7 +43,7 @@ func main() {
 	}()
 
 	<-stop
-	fmt.Println("Shuting Dows Server...")
+	fmt.Println("Shutting Down Server...")
 
 	_, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -53,8 +53,10 @@ func main() {
 	}
 
 	dbInstance, _ := config.DB.DB()
-	if err := dbInstance.Close(); err != nil {
-		fmt.Println("Error To CLose Databse :", err.Error())
+	if err != nil {
+		fmt.Println("Error retrieving DB instance:", err.Error())
+	} else if err := dbInstance.Close(); err != nil {
+		fmt.Println("Error Closing Database:", err.Error())
 	}
 
 	fmt.Println("Server gracefully stopped")
