@@ -1,0 +1,169 @@
+// config/config.go
+package config
+
+import (
+    "fmt"
+    "os"
+    "strconv"
+    "time"
+
+    "github.com/joho/godotenv"
+)
+
+type Config struct {
+    Database DatabaseConfig
+    Server   ServerConfig
+}
+
+type DatabaseConfig struct {
+    Host         string
+    Port         int
+    User         string
+    Password     string
+    Name         string
+    MaxOpenConns int
+    MaxIdleConns int
+    MaxLifetime  time.Duration
+}
+
+type ServerConfig struct {
+    Port int
+    Host string
+}
+
+func LoadConfig() (*Config, error) {
+    // Load .env file if it exists
+    godotenv.Load()
+
+    dbConfig := DatabaseConfig{
+        Host:         getEnv("DB_HOST", "localhost"),
+        Port:         getEnvAsInt("DB_PORT", 3306),
+        User:         getEnv("DB_USER", "root"),
+        Password:     getEnv("DB_PASSWORD", ""),
+        Name:         getEnv("DB_NAME", "myapp"),
+        MaxOpenConns: getEnvAsInt("DB_MAX_OPEN_CONNS", 25),
+        MaxIdleConns: getEnvAsInt("DB_MAX_IDLE_CONNS", 25),
+        MaxLifetime:  time.Duration(getEnvAsInt("DB_CONN_MAX_LIFETIME", 300)) * time.Second,
+    }
+
+    serverConfig := ServerConfig{
+        Port: getEnvAsInt("SERVER_PORT", 8080),
+        Host: getEnv("SERVER_HOST", "0.0.0.0"),
+    }
+
+    return &Config{
+        Database: dbConfig,
+        Server:   serverConfig,
+    }, nil
+}
+
+func (c *DatabaseConfig) GetDSN() string {
+    return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+        c.User,
+        c.Password,
+        c.Host,
+        c.Port,
+        c.Name,
+    )
+}
+
+// Helper functions
+func getEnv(key, defaultValue string) string {
+    if value, exists := os.LookupEnv(key); exists {
+        return value
+    }
+    return defaultValue
+}
+
+func getEnvAsInt(key string, defaultValue int) int {
+    if value, exists := os.LookupEnv(key); exists {
+        if intVal, err := strconv.Atoi(value); err == nil {
+            return intVal
+        }
+    }
+    return defaultValue
+}
+
+// pkg/database/mysql.go
+package database
+
+import (
+    "your-project/config"
+    "gorm.io/driver/mysql"
+    "gorm.io/gorm"
+    "gorm.io/gorm/logger"
+)
+
+type Database struct {
+    *gorm.DB
+}
+
+func NewDatabase(cfg *config.DatabaseConfig) (*Database, error) {
+    db, err := gorm.Open(mysql.Open(cfg.GetDSN()), &gorm.Config{
+        Logger: logger.Default.LogMode(logger.Info),
+    })
+    if err != nil {
+        return nil, err
+    }
+
+    sqlDB, err := db.DB()
+    if err != nil {
+        return nil, err
+    }
+
+    // Set connection pool settings
+    sqlDB.SetMaxOpenConns(cfg.MaxOpenConns)
+    sqlDB.SetMaxIdleConns(cfg.MaxIdleConns)
+    sqlDB.SetConnMaxLifetime(cfg.MaxLifetime)
+
+    return &Database{db}, nil
+}
+
+// cmd/main.go
+package main
+
+import (
+    "log"
+    "your-project/config"
+    "your-project/pkg/database"
+    "your-project/pkg/shutdown"
+    "your-project/internal/delivery/http"
+    "your-project/internal/repository"
+    "your-project/internal/usecase"
+    
+    "github.com/gofiber/fiber/v2"
+)
+
+func main() {
+    // Load configuration
+    cfg, err := config.LoadConfig()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Initialize database
+    db, err := database.NewDatabase(&cfg.Database)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Initialize repositories
+    userRepo := repository.NewUserRepository(db.DB)
+
+    // Initialize use cases
+    userUseCase := usecase.NewUserUseCase(userRepo)
+
+    // Initialize Fiber app
+    app := fiber.New()
+
+    // Initialize handlers
+    http.NewUserHandler(app, userUseCase)
+
+    // Initialize graceful shutdown
+    shutdown := shutdown.NewGracefulShutdown()
+
+    // Execute with graceful shutdown
+    shutdown.Execute(func() error {
+        return app.Listen(fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port))
+    })
+}
