@@ -26,3 +26,16 @@ type MenuPermissionDTO struct {
 	Description string    `json:"description"`
 	Menus       []MenuDTO `json:"menus"`
 }
+
+type InputMenuPermissionDTO struct {
+	MenuID     uint   `json:"menu_id"`
+	Icon       string `json:"icon"`
+	CanView    bool   `json:"can_view"`
+	CanShow    bool   `json:"can_show"`
+	CanCreate  bool   `json:"can_create"`
+	CanUpdate  bool   `json:"can_update"`
+	CanDelete  bool   `json:"can_delete"`
+	Parent     *uint  `json:"parent"`
+	Order      uint16 `json:"order"`
+	MenuActive bool   `json:"menu_active"`
+}

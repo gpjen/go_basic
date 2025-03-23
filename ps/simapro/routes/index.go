@@ -23,6 +23,6 @@ func SetupRoutesApp(app *fiber.App) {
 
 	// 404 Route
 	app.Use(func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusNotFound).SendString("Not Found")
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"message": "Route not found"})
 	})
 }

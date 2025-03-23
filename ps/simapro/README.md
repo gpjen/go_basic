@@ -1,6 +1,4 @@
-# Go Fiber Boilerplate
-
-Go Fiber Boilerplate is a starter template for building simple REST APIs using Go Fiber, GORM, and PostgreSQL. This project provides a ready-to-use setup with features like CRUD operations, pagination, and validation, following the clean architecture principles.
+# SIMAPRO
 
 ## Technologies Used
 
@@ -17,8 +15,6 @@ Go Fiber Boilerplate is a starter template for building simple REST APIs using G
 - **Clean Architecture**: Organized project structure following clean architecture principles.
 - **Swagger**: API documentation using Swagger.
 
-<img  src="./swagger.png" title="Swagger" />
-
 ## Getting Started
 
 ### Prerequisites
@@ -32,7 +28,7 @@ Go Fiber Boilerplate is a starter template for building simple REST APIs using G
 
    ```bash
    git clone https://github.com/gpjen/simapro.git
-   cd go-fiber-boilerplate
+   cd simapro
    ```
 
 2. **Install dependencies:**
@@ -44,6 +40,15 @@ Go Fiber Boilerplate is a starter template for building simple REST APIs using G
 3. **Setup PostgreSQL:**
 
    - Create a PostgreSQL database and update the connection settings in the `config` file.
+
+4. **Migrate & Seeder:**
+
+```bash
+go run database/migrations/migrate.go -action up    // migrate
+go run database/migrations/migrate.go -action down  // drop all table
+go run database/seeders/seed.go                     // run all seeder
+go run database/seeders/seed.go --seed userSeeder   // run by seeder name
+```
 
 4. **Run the application:**
 
@@ -58,7 +63,6 @@ Go Fiber Boilerplate is a starter template for building simple REST APIs using G
 ├── app
 │   ├── controllers    # HTTP handlers for processing requests and returning responses
 │   ├── dto            # Data Transfer Objects for request and response payloads
-│   ├── mappers        # Functions to map between models and DTOs
 │   ├── models         # Data models representing database tables
 │   ├── repositories   # Data access layer for interacting with the database
 │   ├── routes         # Route definitions and setup
