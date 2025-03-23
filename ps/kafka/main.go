@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/signal"
 	"strings"
@@ -44,7 +45,13 @@ func main() {
 			reader := bufio.NewReader(os.Stdin)
 			response, err := reader.ReadString('\n')
 			if err != nil {
-				panic(err)
+				if errors.Is(err, io.EOF) {
+					fmt.Println("\n🔴 Input closed, exiting producer.")
+					break
+				}
+
+				fmt.Println("❌ Error reading input:", err)
+				continue
 			}
 
 			response = strings.TrimSuffix(response, "\n")
@@ -58,10 +65,12 @@ func main() {
 				Key:   nil,
 			}); err != nil {
 				if errors.Is(err, context.Canceled) {
+					fmt.Println("\n🔴 Producer stopped.")
 					break
 				}
 
-				panic(err)
+				fmt.Println("❌ Error sending message:", err)
+				break
 			}
 		}
 	case "consumer":
@@ -72,19 +81,25 @@ func main() {
 			GroupID: groupId,
 		})
 
+		defer consumer.Close()
+
 		for {
 			m, err := consumer.FetchMessage(ctx)
 			if err != nil {
 				if errors.Is(err, context.Canceled) {
+					fmt.Println("\n🔴 Consumer stopped.")
 					break
 				}
-				panic(err)
+
+				fmt.Println("❌ Error fetching message:", err)
+				break
 			}
 
 			fmt.Println(string(m.Value))
 			err = consumer.CommitMessages(ctx, m)
 			if err != nil {
-				panic(err)
+				fmt.Println("❌ Error fetching message:", err)
+				break
 			}
 		}
 
