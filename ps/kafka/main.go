@@ -15,7 +15,7 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-const TopicName = "mytopic"
+const TopicName = "mutopic_esmael"
 
 func main() {
 
