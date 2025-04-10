@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package user;
 
-option go_package = "github.com/gpjen/go_basic/ps/mini_finance/proto/userpb";
+option go_package = "github.com/gpjen/go_basic/ps/mini_finance/proto/user";
 
 service UserService {
     rpc CreateUser(CreateUserRequest) returns (UserResponse);

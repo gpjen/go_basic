@@ -1,4 +1,4 @@
-# SIMAPRO
+# MINI FINANCE
 
 ## Technologies Used
 
@@ -6,6 +6,7 @@
 - **Fiber**: An Express-inspired web framework for Golang.
 - **GORM**: The ORM library for Golang.
 - **PostgreSQL**: The relational database used for storing data.
+- **GRPC**: to comuinication services
 
 ## Features
 
@@ -50,38 +51,17 @@ go run database/seeders/seed.go                     // run all seeder
 go run database/seeders/seed.go --seed userSeeder   // run by seeder name
 ```
 
-4. **Run the application:**
+5. **Comand**
+
+```bash
+protoc   --go_out=paths=source_relative:.   --go-grpc_out=paths=source_relative:.   proto/userpb/user.proto // example to generate protobuffer
+```
+
+6. **Run the application:**
 
    ```bash
    go run main.go
    ```
-
-### Project Structure
-
-```bash
-.
-├── app
-│   ├── controllers    # HTTP handlers for processing requests and returning responses
-│   ├── dto            # Data Transfer Objects for request and response payloads
-│   ├── models         # Data models representing database tables
-│   ├── repositories   # Data access layer for interacting with the database
-│   ├── routes         # Route definitions and setup
-│   └── services       # Business logic and service layer
-├── config             # Configuration settings
-├── docs               # Swagger documentation
-│   ├── docs.go        # Swagger documentation generator
-│   ├── swagger.json   # Swagger JSON file
-│   └── swagger.yaml   # Swagger YAML file
-├── database           # Database connection setup and migrations
-├── utils              # Utility functions and helpers
-├── middlewares        # Fiber middleware for request processing
-├── routes             # Additional route definitions
-├── go.mod             # Go module file
-├── go.sum             # Go module dependencies
-└── main.go            # Entry point of the application
-```
-
-### Contributing
 
 Feel free to contribute to this project! Whether it's bug reports, feature requests, or pull requests, all contributions are welcome.
 
