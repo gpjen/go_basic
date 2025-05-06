@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package account;
+
+option go_package = "github.com/gpjen/go_basic/ps/mini_finance/proto/account";
+
+service AccountService {
+    // rpc CreateAccount(CreateAccountRequest) returns (AccountResponse);
+    // rpc GetAccount(GetUserRequest) returns (AccountResponse);
+}
+

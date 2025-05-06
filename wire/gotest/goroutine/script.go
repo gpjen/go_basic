@@ -5,9 +5,10 @@ import (
 	"io"
 	"net/http"
 	"sync"
+	"time"
 )
 
-const maxGoroutine int = 10
+const maxGoroutine int = 2
 
 func hitApi(url string, id int, wg *sync.WaitGroup) {
 	defer wg.Done()
@@ -31,7 +32,7 @@ func main() {
 	fmt.Println("----- test go routine -----")
 
 	url := "https://visitcount.itsvg.in/api?id=gpjen&icon=0&color=0"
-	totalHits := 100
+	totalHits := 500
 
 	sem := make(chan struct{}, maxGoroutine)
 
@@ -46,6 +47,8 @@ func main() {
 			defer func() { <-sem }()
 			hitApi(url, id, &wg)
 		}(i)
+
+		time.Sleep(5 * time.Millisecond)
 	}
 
 	wg.Wait()
